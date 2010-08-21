@@ -2,11 +2,16 @@
 require_recipe "ruby_enterprise"
 package "git-core"
 
+user "butthead" do
+  comment "Random User"
+end
+
+
 # Set up the application directory
-%w( shared current ).each do |dir|
-  directory "/apps/sample-sinatra/#{dir}" do
-    owner "vagrant"
-    group "vagrant"
+%w( /apps /apps/sample-sinatra ).each do |dir|
+  directory dir do
+    owner "butthead"
+    group "butthead"
     recursive true
   end
 end
@@ -15,10 +20,11 @@ end
 git "/apps/sample-sinatra/current" do
   repository "git://github.com/joevandyk/sample-sinatra.git"
   reference  "master"
-  user  "vagrant"
-  group "vagrant"
-  action :sync
+  user  "butthead"
+  group "butthead"
+  action [:checkout, :sync]
 end
+
 
 # Install bundler (http://gembundler.com/v1.0/index.html)
 # We're using a pre-release version here.
@@ -35,7 +41,7 @@ file "fixienews" do
   start on startup
   respawn
   chdir /apps/sample-sinatra/current
-  exec su vagrant -c "./bin/unicorn"
+  exec su butthead -c "./bin/unicorn"
   EOF
 end
 
