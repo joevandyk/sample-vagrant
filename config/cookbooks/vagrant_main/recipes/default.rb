@@ -3,7 +3,7 @@ require_recipe "ruby_enterprise"
 package "git-core"
 
 user "butthead" do
-  comment "Random User"
+  comment "Some user used for the services"
 end
 
 
@@ -12,7 +12,6 @@ end
   directory dir do
     owner "butthead"
     group "butthead"
-    recursive true
   end
 end
 
@@ -49,28 +48,4 @@ service "sample-sinatra" do
   service_name 'sample-sinatra'
   action :start
   provider Chef::Provider::Service::Upstart
-end
-
-node[:users].each do |username, info|
-  user username do
-    shell "/bin/bash"
-    home "/home/#{username}"
-    action [:create, :modify]
-  end
-
-  directory "/home/#{username}" do
-    owner username
-  end
-
-  if info[:ssh_keys]
-    directory "/home/#{username}/.ssh" do
-      mode "700"
-      owner username
-    end
-    file "#{username}-ssh" do
-      owner username
-      path "/home/#{username}/.ssh/authorized_keys"
-      content info[:ssh_keys]
-    end
-  end
 end

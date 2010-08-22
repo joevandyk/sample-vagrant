@@ -1,0 +1,32 @@
+This is a sample application used to illustrate how to use chef-solo and bundler and vagrant.  
+
+In four commands, you download a new linux VM, configure it with chef-solo, and start up a tiny REE/Sinatra/Unicorn/Bundler web app.
+
+You can then edit the chef cookbooks, run one command, and watch the VM use the new cookbooks.
+
+
+==========================================
+INSTRUCTIONS
+
+1.  Install Virtual Box.  http://www.virtualbox.org/wiki/Downloads
+
+
+2. Checkout source code to project
+git clone git://github.com/joevandyk/sample-vagrant.git && cd sample-vagrant
+
+
+3. Install vagrant gem and download Ubuntu 10.04 (lucid)
+gem install vagrant
+vagrant box add lucid32 http://files.vagrantup.com/lucid32.box
+
+
+4. Start the vagrant box, runs chef-solo, starts up the services
+vagrant up
+==========================================
+
+Then visit http://192.168.10.41:8080?joe=cool to see the webapp in action.
+
+If you are not using Vagrant and instead have an existing Ubuntu 10.04 (32-bit) box, run as root:
+curl http://github.com/joevandyk/sample-vagrant/raw/master/install_chef.sh | sh
+
+That will install REE, chef-solo, and start the chef-solo run.
