@@ -50,3 +50,27 @@ service "sample-sinatra" do
   action :start
   provider Chef::Provider::Service::Upstart
 end
+
+node[:users].each do |username, info|
+  user username do
+    shell "/bin/bash"
+    home "/home/#{username}"
+    action [:create, :modify]
+  end
+
+  directory "/home/#{username}" do
+    owner username
+  end
+
+  if info[:ssh_keys]
+    directory "/home/#{username}/.ssh" do
+      mode "700"
+      owner username
+    end
+    file "#{username}-ssh" do
+      owner username
+      path "/home/#{username}/.ssh/authorized_keys"
+      content info[:ssh_keys]
+    end
+  end
+end
